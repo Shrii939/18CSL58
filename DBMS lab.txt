@@ -1,0 +1,1161 @@
+﻿1st library database
+________________
+
+
+create database order082;
+ use order082;
+
+
+ CREATE TABLE SALESMAN(
+salesman_id INTEGER PRIMARY KEY,
+ NAME varchar(20), 
+city varchar(20), 
+commission varchar(20));
+DESC salesman;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| salesman_id | int         | NO   | PRI | NULL    |       |
+| NAME        | varchar(20) | YES  |     | NULL    |       |
+| city        | varchar(20) | YES  |     | NULL    |       |
+| commission  | varchar(20) | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+ create table CUSTOMER(
+cust_id INTEGER PRIMARY KEY, cust_name varchar(20),
+ city varchar(20), 
+grade INTEGER, 
+salesman_id INTEGER, 
+FOREIGN KEY (salesman_id) REFERENCES SALESMAN(salesman_id) ON   DELETE CASCADE);
+
+
+ show tables;
++--------------------+
+| Tables_in_order082 |
++--------------------+
+| customer           |
+| salesman           |
++--------------------+
+
+
+ desc customer;
++---------------+-------------+------+-----+---------+-------+
+| Field         | Type        | Null | Key | Default | Extra |
++---------------+-------------+------+-----+---------+-------+
+| cust_id       | int         | NO   | PRI | NULL    |       |
+| city          | varchar(20) | YES  |     | NULL    |       |
+| grade         | int         | YES  |     | NULL    |       |
+| salesman_id   | int         | YES  | MUL | NULL    |       |
+| customer_name | varchar(20) | YES  |     | NULL    |       |
++---------------+-------------+------+-----+---------+-------+
+
+
+create table  ORDERS(
+order_no INTEGER PRIMARY KEY, 
+purchase_amt integer, 
+order_date DATE, 
+cust_id INTEGER, 
+salesman_id INTEGER, FOREIGN KEY (cust_id) REFERENCES CUSTOMER(cust_id) ON DELETE CASCADE,
+ FOREIGN KEY (SALESMAN_ID) REFERENCES SALESMAN(salesman_id) on delete cascade);
+
+
+desc orders
+    -> ;
++-------------+------+------+-----+---------+-------+
+| Field       | Type | Null | Key | Default | Extra |
++-------------+------+------+-----+---------+-------+
+| order_no    | int  | NO   | PRI | NULL    |       |
+| order_date  | date | YES  |     | NULL    |       |
+| cust_id     | int  | YES  | MUL | NULL    |       |
+| salesman_id | int  | YES  | MUL | NULL    |       |
++-------------+------+------+-----+---------+-------+
+
+
+
+
+
+
+ show tables;
++--------------------+
+| Tables_in_order082 |
++--------------------+
+| customer           |
+| orders             |
+| salesman           |
++--------------------+
+
+
+
+
+insert into salesman values(1000, "shridhar", "Banglore", "80%");
+insert into salesman values(1001, "shadwal", "Banglore", "90%");
+insert into salesman values(1002, "shuhoodh", "Banglore", "25%");
+insert into salesman values(1003, "sampath", "Udupi", "40%");
+insert into salesman values(1004, "sainath", "Manglore", "50%");
+
+
+ select * from salesman;
++-------------+----------+----------+------------+
+| salesman_id | NAME     | city     | commission |
++-------------+----------+----------+------------+
+|        1000 | shridhar | Banglore | 80%        |
+|        1001 | shadwal  | Banglore | 90%        |
+|        1002 | shuhoodh | Banglore | 25%        |
+|        1003 | sampath  | Udupi    | 40%        |
+|        1004 | sainath  | Manglore | 50%        |
++-------------+----------+----------+------------+
+5 rows in set (0.00 sec)
+
+
+
+
+insert into customer values(1, "udupi", 100, 1000, "John");
+insert into customer values(2, "Manglore", 200, 1000, "Cena");
+insert into customer values(3, "Banglore", 150, 1001, "Pheonix");
+insert into customer values(4, "Banglore", 200, 1002, "Jett");
+insert into customer values(5, "Manglore", 100, 1003, "yttit");
+
+
+
+
+select * from customer;
++---------+----------+-------+-------------+---------------+
+| cust_id | city     | grade | salesman_id | customer_name |
++---------+----------+-------+-------------+---------------+
+|       1 | udupi    |   100 |        1000 | John          |
+|       2 | Manglore |   200 |        1000 | Cena          |
+|       3 | Banglore |   150 |        1001 | Pheonix       |
+|       4 | Banglore |   200 |        1002 | Jett          |
+|       5 | Manglore |   100 |        1003 | yttit         |
++---------+----------+-------+-------------+---------------+
+5 rows in set (0.00 sec)
+
+
+
+
+insert into orders values(10, 2000 ,'2022-11-11', 1, 1000 );
+insert into orders values(11, 5000, '2022-12-10', 2, 1000);
+insert into orders values(12 , 7800, '2022-11-14', 3, 1001);
+insert into orders values(14 , 6000, '2022-12-08', 1, 1003);
+insert into orders values(13 , 2000, '2022-12-19', 4, 1004);
+
+
+
+
+ select * from orders;
++----------+--------------+------------+---------+-------------+
+| order_no | purchase_amt | order_date | cust_id | salesman_id |
++----------+--------------+------------+---------+-------------+
+|       10 |         2000 | 2022-11-11 |       1 |        1000 |
+|       11 |         5000 | 2022-12-10 |       2 |        1000 |
+|       12 |         7800 | 2022-11-14 |       3 |        1001 |
+|       13 |         2000 | 2022-12-19 |       4 |        1004 |
+|       14 |         6000 | 2022-12-08 |       1 |        1003 |
++----------+--------------+------------+---------+-------------+
+5 rows in set (0.00 sec)
+
+
+SELECT COUNT(
+cust_id) as cust_count 
+FROM customer
+ WHERE grade > (
+SELECT avg(grade)
+ FROM customer
+ WHERE city='Banglore' );
++------------+
+| cust_count |
++------------+
+|          2 |
++------------+
+1 row in set (0.00 sec)
+
+
+
+
+
+
+find the name and n0, if all salesman who had morethen 1 customer
+
+
+SELECT salesman.salesman_id, salesman.name
+ FROM salesman, customer 
+WHERE customer.salesman_id=salesman.salesman_id
+GROUP BY customer.salesman_id having count(customer.cust_id)>1;
++-------------+----------+
+| salesman_id | name     |
++-------------+----------+
+|        1000 | shridhar |
++-------------+----------+
+1 row in set (0.00 sec)
+
+
+ SELECT DISTINCT salesman.salesman_id,salesman.name,customer.customer_name, salesman.commission 
+FROM salesman, customer WHERE salesman.city=customer.city AND salesman.salesman_id=customer.salesman_id  
+UNION SELECT DISTINCT salesman.salesman_id, salesman.name, 'no_customer', salesman.commission 
+FROM salesman 
+WHERE NOT city=ANY(
+SELECT CITY FROM customer 
+WHERE salesman.city=customer.city 
+AND salesman.salesman_id=customer.salesman_id);
++-------------+----------+---------------+------------+
+| salesman_id | name     | customer_name | commission |
++-------------+----------+---------------+------------+
+|        1000 | shridhar | Johbbb        | 80%        |
+|        1001 | shadwal  | Pheonix       | 90%        |
+|        1002 | shuhoodh | Jett          | 25%        |
+|        1003 | sampath  | no_customer   | 40%        |
+|        1004 | sainath  | no_customer   | 50%        |
++-------------+----------+---------------+------------+
+5 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+4th queriy
+
+
+
+
+
+
+CREATE VIEW HIGHER AS
+SELECT salesman.salesman_id, salesman.name, salesman.city, orders.order_date, purchase_amt 
+FROM orders, salesman 
+WHERE salesman.salesman_id=orders.salesman_id 
+AND orders.purchase_amt=(select MAX(o.purchase_amt) 
+FROM orders o 
+WHERE orders.order_date=o.order_date);
+Query OK, 0 rows affected (0.01 sec)
+
+
+mysql> select * from higher;
++-------------+----------+----------+------------+--------------+
+| salesman_id | name     | city     | order_date | purchase_amt |
++-------------+----------+----------+------------+--------------+
+|        1000 | shridhar | Banglore | 2022-11-11 |         2000 |
+|        1000 | shridhar | Banglore | 2022-12-10 |         5000 |
+|        1001 | shadwal  | Banglore | 2022-11-14 |         7800 |
+|        1003 | sampath  | Udupi    | 2022-12-08 |         6000 |
+|        1004 | sainath  | Manglore | 2022-12-19 |         2000 |
++-------------+----------+----------+------------+--------------+
+5 rows in set (0.00 sec)
+
+
+5th query deleting salesman id = 1000;
+
+
+ DELETE
+ FROM salesman
+ WHERE salesman_id = '1000';
+Query OK, 1 row affected (0.02 sec)
+
+
+mysql> select * from salesman;
++-------------+----------+----------+------------+
+| salesman_id | NAME     | city     | commission |
++-------------+----------+----------+------------+
+|        1001 | shadwal  | Banglore | 90%        |
+|        1002 | shuhoodh | Banglore | 25%        |
+|        1003 | sampath  | Udupi    | 40%        |
+|        1004 | sainath  | Manglore | 50%        |
++-------------+----------+----------+------------+
+4 rows in set (0.00 sec)
+
+
+________________
+
+
+
+
+2. 
+
+
+
+
+use movie082;
+Database changed
+CREATE TABLE  ACTOR(
+ act_id INTEGER(10) PRIMARY KEY,
+ act_name varchar(20), 
+ act_gender varchar(20));
+Query OK, 0 rows affected, 1 warning (0.05 sec)
+
+
+CREATE TABLE director(
+dir_id INTEGER(10) PRIMARY KEY, 
+dir_name varchar(20), 
+dir_phono bigint);
+Query OK, 0 rows affected, 1 warning (0.03 sec)
+
+
+CREATE TABLE movies(
+mov_id integer(10) primary key, 
+mov_title varchar(20), mov_year int, 
+mov_lang varchar(20), 
+dir_id integer, 
+FOREIGN key(dir_id) references director(dir_id) on delete cascade);
+Query OK, 0 rows affected, 1 warning (0.05 sec)
+
+
+CREATE TABLE MOVIE_CAST(
+ACT_ID INTEGER(10), 
+MOV_ID INTEGER(10), 
+ROLE VARCHAR(20),
+          PRIMARY KEY(ACT_ID, MOV_ID), FOREIGN KEY(ACT_ID) REFERENCES ACTOR(ACT_ID) ON DELETE CASCADE,
+ FOREIGN KEY(MOV_ID) REFERENCES MOVIES(MOV_ID) ON DELETE CASCADE);
+Query OK, 0 rows affected, 2 warnings (0.03 sec)
+
+
+create table rating(
+mov_id integer(10),
+ rev_stars integer(10), 
+primary key(mov_id, rev_stars), 
+foreign key(mov_id) references movies(mov_id) on delete cascade);
+Query OK, 0 rows affected, 2 warnings (0.02 sec)
+
+
+
+
+mysql> show tables;
++--------------------+
+| Tables_in_movie082 |
++--------------------+
+| actor              |
+| director           |
+| movie_cast         |
+| movies             |
+| rating             |
++--------------------+
+5 rows in set (0.00 sec)
+
+
+
+
+insert into actor values(1, 'M_Actor_1', 'M');
+insert into actor values(2, 'F_Actor_1', 'F');
+insert into actor values(3, 'M_Actor_2', 'M');
+insert into actor values(4, 'F_Actor_2', 'F');
+
+
+mysql> select * from actor;
++--------+-----------+------------+
+| act_id | act_name  | act_gender |
++--------+-----------+------------+
+|      1 | M_Actor_1 | M          |
+|      2 | F_Actor_1 | F          |
+|      3 | M_Actor_2 | M          |
+|      4 | F_Actor_2 | F          |
++--------+-----------+------------+
+4 rows in set (0.00 sec)
+
+
+insert into director values(1, 'Hitchcock', '420420420420');
+insert into director values(2, 'Steven spielberg', '420420420421');
+insert into director values(3, 'shridhar', '987654321');
+insert into director values(4, 'shadwal', '123654987');
+
+
+mysql> select * from director;
++--------+------------------+--------------+
+| dir_id | dir_name         | dir_phono    |
++--------+------------------+--------------+
+|      1 | Hitchcock        | 420420420420 |
+|      2 | Steven spielberg | 420420420421 |
+|      3 | shridhar         |    987654321 |
+|      4 | shadwal          |    123654987 |
++--------+------------------+--------------+
+4 rows in set (0.00 sec)
+
+
+
+
+insert into movies values(1,'Im going!',1997 , 'Eng', 1);
+insert into movies values(2, 'Im back', 2002, 'kannada', 2);
+insert into movies values(3, 'Im gon again', 2012, 'Hindi', 3);
+insert into movies values(4, 'Im back again', 2016, 'Eng', 4); 
+
+
+mysql> select * from movies;
++--------+---------------+----------+----------+--------+
+| mov_id | mov_title     | mov_year | mov_lang | dir_id |
++--------+---------------+----------+----------+--------+
+|      1 | Im going!     |     1997 | Eng      |      1 |
+|      2 | Im back       |     2002 | kannada  |      2 |
+|      3 | Im gon again  |     2012 | Hindi    |      3 |
+|      4 | Im back again |     2016 | Eng      |      4 |
++--------+---------------+----------+----------+--------+
+4 rows in set (0.00 sec)
+
+
+
+
+insert into movie_cast values(1, 1, "lead M_actor");
+insert into movie_cast values(2, 1, "lead F_actor");
+insert into movie_cast values(1, 2, "lead M_actor");
+insert into movie_cast values(2, 2, "lead F_actor");
+insert into movie_cast values(3, 3, "lead M_actor");
+insert into movie_cast values(4, 3, "lead F_actor");
+insert into movie_cast values(1, 4, "lead M_actor");
+insert into movie_cast values(4, 4, "lead F_actor");
+
+
+mysql>
+mysql> select * from movie_cast;
++--------+--------+--------------+
+| act_id | mov_id | role         |
++--------+--------+--------------+
+|      1 |      1 | lead M_actor |
+|      1 |      2 | lead M_actor |
+|      1 |      4 | lead M_actor |
+|      2 |      1 | lead F_actor |
+|      2 |      2 | lead F_actor |
+|      3 |      3 | lead M_actor |
+|      4 |      3 | lead F_actor |
+|      4 |      4 | lead F_actor |
++--------+--------+--------------+
+8 rows in set (0.00 sec)
+
+
+insert into rating values(1, 5);
+insert into rating values(2, 4);
+insert into rating values(3, 3);
+insert into rating values(4, 2);
+
+
+mysql> select * from rating;
++--------+-----------+
+| mov_id | rev_stars |
++--------+-----------+
+|      1 |         5 |
+|      2 |         4 |
+|      3 |         3 |
+|      4 |         2 |
++--------+-----------+
+4 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+1. title -> hitcock
+
+
+SELECT movies.mov_title 
+FROM movies, director 
+WHERE movies.dir_id=director.dir_id
+AND dir_name="Hitchcock";
++-----------+
+| mov_title |
++-----------+
+| Im going! |
++-----------+
+1 row in set (0.00 sec)
+
+
+2. more actors;
+
+
+
+
+SELECT mov_title  
+FROM movies, movie_cast 
+WHERE movies.mov_id=movie_cast.mov_id 
+AND act_id IN (
+SELECT act_id from movie_cast 
+GROUP BY act_id HAVING COUNT(act_id) > 1 )
+ GROUP BY mov_title HAVING count(*);
++---------------+
+| mov_title     |
++---------------+
+| Im going!     |
+| Im back       |
+| Im gon again  |
+| Im back again |
++---------------+
+4 rows in set (0.00 sec)
+
+
+SELLECT act_name, mov_title, mov_year 
+FROM actor JOIN movie_cast ON actor.act_id=movie_cast.act_id 
+JOIN movies on movie_cast.mov_id=movies.mov_id 
+WHERE movies.mov_year NOT Between 2000 AND 2015;
+
+
++-----------+---------------+----------+
+| act_name  | mov_title     | mov_year |
++-----------+---------------+----------+
+| M_Actor_1 | Im going!     |     1997 |
+| M_Actor_1 | Im back again |     2016 |
+| F_Actor_1 | Im going!     |     1997 |
+| F_Actor_2 | Im back again |     2016 |
++-----------+---------------+----------+
+4 rows in set (0.00 sec)
+
+
+
+
+SELECT act_name, mov_title, mov_year 
+FROM actor JOIN movie_cast ON actor.act_id= movie_cast.act_id 
+JOIN movies ON movie_cast.mov_id=movies.mov_id 
+WHERE movies.mov_year 
+NOT BETWEEN 2000 AND 2015;
++-----------+---------------+----------+
+| act_name  | mov_title     | mov_year |
++-----------+---------------+----------+
+| M_Actor_1 | Im going!     |     1997 |
+| M_Actor_1 | Im back again |     2016 |
+| F_Actor_1 | Im going!     |     1997 |
+| F_Actor_2 | Im back again |     2016 |
++-----------+---------------+----------+
+4 rows in set (0.02 sec)
+
+
+
+
+SELECT  mov_title, MAX(Rev_stars)
+ FROM movies, Rating 
+WHERE Movies.mov_id = Rating.mov_id  
+GROUP BY rating.mov_id 
+ORDER BY mov_title;
++---------------+----------------+
+| mov_title     | MAX(Rev_stars) |
++---------------+----------------+
+| Im back       |              4 |
+| Im back again |              2 |
+| Im going!     |              5 |
+| Im gon again  |              3 |
++---------------+----------------+
+4 rows in set (0.01 sec)
+
+
+
+
+UPDATE rating set rev_stars=5 
+WHERE mov_id IN (
+SELECT mov_id 
+FROM movies 
+WHERE dir_id in (
+SELECT dir_id 
+FROM director 
+WHERE dir_name="steven smith"));
+
+
+Query OK, 0 rows affected (0.01 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+
+mysql> select * from rating;
++--------+-----------+
+| mov_id | rev_stars |
++--------+-----------+
+|      1 |         5 |
+|      2 |         4 |
+|      3 |         3 |
+|      4 |         2 |
++--------+-----------+
+4 rows in set (0.00 sec)
+
+
+
+
+________________
+
+
+3rd 
+Collage database
+
+
+CREATE TABLE student(
+usn varchar(20) PRIMARY KEY, 
+sname varchar(20), 
+address varchar(20), 
+phono BIGINT, 
+gender varchar(20));
+
+
+
+
+CREATE TABLE semsec(
+ssid varchar(20) PRIMARY KEY, 
+sem integer, 
+sec varchar(20));
+
+
+
+
+CREATE TABLE class(
+usn varchar(20),
+ ssid varchar(20), 
+PRIMARY KEY(usn), 
+FOREIGN KEY(usn) REFERENCES student(usn) ON DELETE CASCADE);
+
+
+CREATE TABLEcourse(
+subcode varchar(20) primary key ,
+ title varchar(20),
+ sem integer, 
+credits integer);
+
+
+CREATE TABLE iamark(
+usn varchar(20), 
+subcode varchar(20), 
+ssid varchar(20), 
+test1 integer, 
+test2 integer, 
+test3 integer, 
+finalia integer, 
+PRIMARY KEY(usn, subcode, ssid),
+ FOREIGN KEY(usn) REFERENCES student(usn) on delete cascade, 
+FOREIGN KEY(subcode) REFERENCES course(subcode) on delete cascade, FOREIGN KEY(ssid) REFERENCES semsec(ssid) on delete cascade);
+
+
+
+
+mysql> insert into student values('4MW24CS082', 'shridhar' ,'koteshwara', 91082749839, 'M');
+insert into student values('4MW22CS070', 'shadwal' ,'santhe katte', 91082749619, 'M');
+insert into student values('4MW23CS076', 'shravya' ,'koteshwara', 9876655625, 'F');
+insert into student values('4MW24CS079', 'koti mari' ,'ache shriva', 91045749839, 'F');
+insert into student values('4MW20CS018', 'chandana' ,'Thetatte', 9108278967, 'F');
+insert into student values('4MW23CS073', 'shuhood' ,'katpadi', 7508273912, 'M');
+insert into student values('4MW21CS038', 'krishna' ,'kota', 91082747889, 'M');
+insert into student values('4MW20CS045', 'Dhrishya' ,'Anegudde', 457885449, 'F');
+insert into student values('4MW21CS049', 'nandeesh' ,'udupi', 965885449, 'M');
+insert into student values('4MW22CS068', 'raksha' ,'udupi', 5615885449, 'F');
+insert into student value("4MW20CS0100","Prakash","Kumbashi",589764545,'M');
+insert into student values("4MW20CS0101","Gautham","Kumbashi",7897836545,'M');
+insert into student values("4MW20CS0121","Anamika","Baindoor",9865426545,'M');
+insert into student value("4MW20CS0130","Amrutha","Gopadi",425664545,'F');
+
+
+
+
+
+
+mysql> select  * from student;
++-------------+-----------+--------------+-------------+--------+
+| usn         | sname     | address      | phono       | gender |
++-------------+-----------+--------------+-------------+--------+
+| 4MW20CS0100 | Prakash   | Kumbashi     |   589764545 | M      |
+| 4MW20CS0101 | Gautham   | Kumbashi     |  7897836545 | M      |
+| 4MW20CS0121 | Anamika   | Baindoor     |  9865426545 | M      |
+| 4MW20CS0130 | Amrutha   | Gopadi       |   425664545 | F      |
+| 4MW20CS018  | chandana  | Thetatte     |  9108278967 | F      |
+| 4MW20CS045  | Dhrishya  | Anegudde     |   457885449 | F      |
+| 4MW21CS038  | krishna   | kota         | 91082747889 | M      |
+| 4MW21CS049  | nandeesh  | udupi        |   965885449 | M      |
+| 4MW22CS068  | raksha    | udupi        |  5615885449 | F      |
+| 4MW22CS070  | shadwal   | santhe katte | 91082749619 | M      |
+| 4MW23CS073  | shuhood   | katpadi      |  7508273912 | M      |
+| 4MW23CS076  | shravya   | koteshwara   |  9876655625 | F      |
+| 4MW24CS079  | koti mari | ache shriva  | 91045749839 | F      |
+| 4MW24CS082  | shridhar  | koteshwara   | 91082749839 | M      |
++-------------+-----------+--------------+-------------+--------+
+
+
+insert into semsec values('1CSEA' , '1', 'A');
+insert into semsec values('1CSEB' , '1', 'B');
+insert into semsec values('2CSEA' , '2', 'A');
+insert into semsec values('2CSEB' , '2', 'B');
+insert into semsec values('3CSEA' , '3', 'A');
+insert into semsec values('3CSEB' , '3', 'B');
+insert into semsec values('4CSEA' , '4', 'A');
+insert into semsec values('4CSEB' , '4', 'B');
+insert into semsec values('5CSEA' , '5', 'A');
+insert into semsec values('5CSEB' , '5', 'B');
+insert into semsec values('6CSEA' , '6', 'A');
+insert into semsec values('6CSEB' , '6', 'B');
+insert into semsec values('7CSEA' , '7', 'A');
+insert into semsec values('7CSEB' , '7', 'B');
+insert into semsec values('8CSEA' , '8', 'A');
+insert into semsec values('8CSEB' , '8', 'B');
+insert into semsec values('8CSEC' , '8', 'C');
+INSERT INTO semsec values("4CSEC", 4, "C");
+
+
+mysql> select * from semsec;
++-------+------+------+
+| ssid  | sem  | sec  |
++-------+------+------+
+| 1CSEA |    1 | A    |
+| 1CSEB |    1 | B    |
+| 2CSEA |    2 | A    |
+| 2CSEB |    2 | B    |
+| 3CSEA |    3 | A    |
+| 3CSEB |    3 | B    |
+| 4CSEA |    4 | A    |
+| 4CSEB |    4 | B    |
+| 4CSEC |    4 | C    |
+| 5CSEA |    5 | A    |
+| 5CSEB |    5 | B    |
+| 6CSEA |    6 | A    |
+| 6CSEB |    6 | B    |
+| 7CSEA |    7 | A    |
+| 7CSEB |    7 | B    |
+| 8CSEA |    8 | A    |
+| 8CSEB |    8 | B    |
+| 8CSEC |    8 | C    |
++-------+------+------+
+18 rows in set (0.00 sec)
+
+
+mysql> insert into class values('4MW20CS018','1CSEA');
+insert into class values('4MW20CS045','1CSEB');
+insert into class values('4MW21CS038','2CSEA');
+insert into class values('4MW21CS049','2CSEB');
+insert into class values('4MW22CS068','3CSEA');
+insert into class values('4MW22CS070','3CSEB');
+insert into class values('4MW23CS073','4CSEA');
+insert into class values('4MW23CS076','4CSEB');
+insert into class values('4MW24CS079','5CSEA');
+insert into class values('4MW24CS082','5CSEB');
+insert into class values("4MW20CS0100","4CSEC");
+insert into class values("4MW20CS0101","8CSEA");
+insert into class values("4MW20CS0121","8CSEC");
+insert into class values("4MW20CS0130","8CSEB");
+
+
+mysql> select * from class;
++-------------+-------+
+| usn         | ssid  |
++-------------+-------+
+| 4MW20CS0100 | 4CSEC |
+| 4MW20CS0101 | 8CSEA |
+| 4MW20CS0121 | 8CSEC |
+| 4MW20CS0130 | 8CSEB |
+| 4MW20CS018  | 1CSEA |
+| 4MW20CS045  | 1CSEB |
+| 4MW21CS038  | 2CSEA |
+| 4MW21CS049  | 2CSEB |
+| 4MW22CS068  | 3CSEA |
+| 4MW22CS070  | 3CSEB |
+| 4MW23CS073  | 4CSEA |
+| 4MW23CS076  | 4CSEB |
+| 4MW24CS079  | 5CSEA |
+| 4MW24CS082  | 5CSEB |
++-------------+-------+
+14 rows in set (0.00 sec)
+
+
+
+
+insert into course values('18CS11', 'engg_maths', 1, 4);
+insert into course values('18CS12', 'Arth_maths', 2, 4);
+insert into course values('20CS13', 'maths_3', 3, 3);
+insert into course values('20CS14', 'maths_4', 4, 3);
+insert into course values('20CS15', 'CO', 5, 2);
+insert into course values('20CS16', 'DBMS', 6, 4);
+insert into course values('20CS17', 'ML', 7, 3);
+insert into course values('20CS18', 'AI', 8, 4);
+
+
+mysql> select * from course;
++---------+------------+------+---------+
+| subcode | title      | sem  | credits |
++---------+------------+------+---------+
+| 18CS11  | engg_maths |    1 |       4 |
+| 18CS12  | Arth_maths |    2 |       4 |
+| 20CS13  | maths_3    |    3 |       3 |
+| 20CS14  | maths_4    |    4 |       3 |
+| 20CS15  | CO         |    5 |       2 |
+| 20CS16  | DBMS       |    6 |       4 |
+| 20CS17  | ML         |    7 |       3 |
+| 20CS18  | AI         |    8 |       4 |
++---------+------------+------+---------+
+8 rows in set (0.00 sec)
+
+
+INSERT INTO iamark values("4MW20CS0101","20CS18","8CSEA", 12, 17, 20,16);
+INSERT INTO iamark values("4MW20CS0130","20CS18","8CSEB", 12, 17, 16 ,14);
+INSERT INTO iamark values("4MW20CS0121","20CS18","8CSEC", 9, 9, 8 ,9);
+
+
+mysql> select * from iamark;
++-------------+---------+-------+-------+-------+-------+---------+
+| usn         | subcode | ssid  | test1 | test2 | test3 | finalia |
++-------------+---------+-------+-------+-------+-------+---------+
+| 4MW20CS0101 | 20CS18  | 8CSEA |    12 |    17 |    20 |      16 |
+| 4MW20CS0121 | 20CS18  | 8CSEC |     9 |     9 |     8 |       9 |
+| 4MW20CS0130 | 20CS18  | 8CSEB |    12 |    17 |    16 |      14 |
++-------------+---------+-------+-------+-------+-------+---------_________________________
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+
+1. 
+
+
+SELECT s.*, ss.sem, ss.sec 
+FROM student s, semsec ss, class c
+ WHERE s.usn=c.usn 
+AND ss.ssid=c.ssid 
+AND ss.sem=4 
+AND ss.sec="C" ;
++-------------+---------+----------+-----------+--------+------+------+
+| usn         | sname   | address  | phono     | gender | sem  | sec  |
++-------------+---------+----------+-----------+--------+------+------+
+| 4MW20CS0100 | Prakash | Kumbashi | 589764545 | M      |    4 | C    |
++-------------+---------+----------+-----------+--------+------+------+
+
+
+2. 
+SELECT ss.sem, ss.sec, s.gender, count(s.gender) AS count 
+FROM student s, semsec ss, class c 
+WHERE s.usn=c.usn 
+AND ss.ssid=c.ssid 
+GROUP BY ss.sem, ss.sec, s.gender 
+ORDER BY sem;
++------+------+--------+-------+
+| sem  | sec  | gender | count |
++------+------+--------+-------+
+|    1 | A    | F      |     1 |
+|    1 | B    | F      |     1 |
+|    2 | A    | M      |     1 |
+|    2 | B    | M      |     1 |
+|    3 | A    | F      |     1 |
+|    3 | B    | M      |     1 |
+|    4 | A    | M      |     1 |
+|    4 | B    | F      |     1 |
+|    4 | C    | M      |     1 |
+|    5 | A    | F      |     1 |
+|    5 | B    | M      |     1 |
+|    8 | A    | M      |     1 |
+|    8 | B    | F      |     1 |
+|    8 | C    | M      |     1 |
++------+------+--------+-------+
+14 rows in set (0.00 sec)
+
+
+mysql>
+
+
+
+
+3. 
+CREATE view stu_test1_marks_view1 AS 
+SELECT test1, subcode
+FROM iamark 
+WHERE usn="4MW20CS0130";
+
+
+
+
+mysql> select * from stu_test1_marks_view1;
++-------+---------+
+| test1 | subcode |
++-------+---------+
+|    12 | 20CS18  |
++-------+---------+
+
+
+
+
+4. 
+mysql> delimiter //
+mysql> create procedure iamarks()
+    -> begin
+    -> update iamark
+    -> set finalia = ((test1+test2+test3)-LEAST(test1, test2, test3))/2 ;
+    -> end //
+mysql> delimiter ;
+mysql> call iamarks();
+
+
+mysql> select * from iamark;
++-------------+---------+-------+-------+-------+-------+---------+
+| usn         | subcode | ssid  | test1 | test2 | test3 | finalia |
++-------------+---------+-------+-------+-------+-------+---------+
+| 4MW20CS0101 | 20CS18  | 8CSEA |    12 |    17 |    20 |      19 |
+| 4MW20CS0121 | 20CS18  | 8CSEC |     9 |     9 |     8 |       9 |
+| 4MW20CS0130 | 20CS18  | 8CSEB |    12 |    17 |    16 |      17 |
++-------------+---------+-------+-------+-------+-------+---------+
+
+
+
+
+5. 
+SELECT s.usn, s.sname, s.address, s.phono, s.gender, ss.sem, ss.sec, ( 
+CASE
+ WHEN IA.finalia BETWEEN 17 AND 20 THEN 'OUTSTANDING' 
+ WHEN IA.finalia BETWEEN 12 AND 16 THEN "AVERAGE"
+ ELSE "WEAK" END)
+ AS CAT FROM student s, semsec ss, iamark IA 
+WHERE s.usn=IA.usn 
+AND ss.ssid=IA.ssid 
+AND ss.sem=8 
+AND ss.sec IN ('A', 'B', 'C');
++-------------+---------+----------+------------+--------+------+------+-------------+
+| usn         | sname   | address  | phono      | gender | sem  | sec  | CAT         |
++-------------+---------+----------+------------+--------+------+------+-------------+
+| 4MW20CS0101 | Gautham | Kumbashi | 7897836545 | M      |    8 | A    | OUTSTANDING |
+| 4MW20CS0130 | Amrutha | Gopadi   |  425664545 | F      |    8 | B    | OUTSTANDING |
+| 4MW20CS0121 | Anamika | Baindoor | 9865426545 | M      |    8 | C    | WEAK        |
++-------------+---------+----------+------------+--------+------+------+-------------+
+3 rows in set (0.00 sec)
+
+
+
+
+
+
+________________
+
+
+5th 
+CREATE TABLE department(
+dnumber integer(5), 
+dname varchar(20), 
+mgr_ssn integer(10),
+ mgr_start_date Date, 
+ PRIMARY KEY(dnumber, dname));
+
+
+
+
+CREATE TABLEemployee(
+fname varchar(20), 
+lname varchar(20),
+ ssn integer(10) PRIMARY KEY, 
+Bdate date, 
+Address varchar(200), 
+sex char(1), 
+salary integer(10), 
+super_ssn integer(10), 
+dnumber integer(5), 
+FOREIGN KEY(dnumber) REFERENCES department(dnumber) ON DELETE     CASCADE);
+
+
+
+
+CREATE TABLE dlocation(
+dnumber integer(5) PRIMARY KEY, 
+dlocation varchar(20), 
+FOREIGN KEY(dnumber) REFERENCES department(dnumber) ON DELETE CASCADE);
+
+
+
+
+CREATE TABLE project(
+pno integer(5) PRIMARY KEY, 
+pname varchar(20),
+ploc varchar(200),
+ dnumber integer(5), 
+FOREIGN KEY(dnumber) REFERENCES dlocation(dnumber) ON DELETE CASCADE);
+
+
+
+
+CREATE TABLE workson(
+ssn integer, 
+pno integer, 
+hours integer,
+ PRIMARY KEY(ssn, pno), 
+FOREIGN KEY(ssn) references employee(ssn) on delete cascade, 
+FOREIGN KEY(pno) references project(pno) on delete cascade);
+
+
+insert into department values(5,'Research','333445555','1988-05-22');
+insert into department values(4,'Administration','987654321','1995-01-01');
+insert into department values(1,'Headquarters','888665555','1981-06-19');
+insert into department values(3,'Accounts','888665555','1981-06-19');
+
+
+insert into dlocation values(1,'Houston');
+insert into dlocation values(4,'Stafford');
+insert into dlocation values(5,'Bellaire');
+insert into dlocation values(5,'Sugarland');
+insert into dlocation values(5,'Houston');
+insert into dlocation values(3,'Koteshwara');
+
+
+insert into employee values('John ','Smith',123456789,'99/12/1','731 Fondren','M',700000,5,'3334455555');
+insert into employee values(,'Franklin ','Brogw',333445555,'99/12/2','638 Voss','M',600000,5,'888665555');
+insert into employee values('Alicia ','Broger',999887777,'99/12/3,'3321 Castle','F',500000,4,'987654321');
+insert into employee values('Jennifer ','Smith',987654321,'99/12/4,'291 Berry','F',700000,4,'888665555');
+insert into employee values('Ramesh','Narayan',666884444,'99/12/5','975 Fire oak','M',600000,5,'333445555');
+insert into employee values('Joyce ',English',453453453,'99/12/6,'5631 Rice','F',400000,5,'3334455555');
+insert into employee values('Ahmad ','Scott',987987987,'99/3/7','980 Dallas','M',300000,4,'987654321');
+insert into employee values('James ','Smith',888665555,'99/3/8','450 Stone','M',100000,3,'NULL');
+insert into employee values('Michael ','Scott',234567891,'99/3/9','221 Aculite','M',200000,5,'3334455555');
+insert into employee values('Pam ','Beasley',345678912,'99/3/11','486 Fugglet','F',700000,4,'3334455555');
+insert into employee values('Jim ','Halpert',456789123,'99/3/15','891 Tomographic','M',100000,5,'3334455555');
+insert into employee values('Kevin ','Smith',567891234,'99/3/7','212 Platestreet','M',700000,4,'3334455555');
+insert into employee values('Dwight ','Schrute',678912345,'99/3/31','731 Grovestreet','M',600000,4,'3334455555');
+insert into employee values('Day ','Light',45678382,'99/3/31','731 dayStreet','M',700000,5,'3334455555');
+insert into employee values('Pam ','Tree',654378912,'99/3/11','645 pstreet','F',900000,4,'987654321');
+insert into employee values('cc ','three',789334113,'99/3/1','111 Fugglet','F',700000,3,'4443355555');
+
+
+
+
+
+
+
+
+insert into project values(1,'Valorant','Texas',4);
+insert into project values(2,'Apex','California',4);
+insert into project values(3,'PUBG','Nevada',4);
+insert into project values(4,'Squad','New York',3);
+insert into project values(5,'IoT','Washington',5);
+
+
+
+
+insert into workson values(234567891,1,20);
+insert into workson values(234567891,2,10);
+insert into workson values(234567891,3,15);
+insert into workson values(234567891,4,11);
+insert into workson values(234567891,5,05);
+insert into workson values(678912345,2,20);
+
+
+
+
+
+
+
+
+
+
+
+
+mysql> select * from employee;
++----------+---------+-----------+------------+-----------------+------+--------+---------+------------+
+| fname    | lname   | ssn       | Bdate      | Address         | sex  | salary | dnumber | super_ssn  |
++----------+---------+-----------+------------+-----------------+------+--------+---------+------------+
+| Day      | Light   |  45678382 | 1999-03-31 | 731 dayStreet   | M    | 700000 |       5 | 3334455555 |
+| John     | Smith   | 123456789 | 1999-12-01 | 731 Fondren     | M    | 700000 |       5 | 3334455555 |
+| Michael  | Scott   | 234567891 | 1999-03-09 | 221 Aculite     | M    | 200000 |       5 | 3334455555 |
+| Pam      | Beasley | 345678912 | 1999-03-11 | 486 Fugglet     | F    | 700000 |       4 | 3334455555 |
+| Jim      | Halpert | 456789123 | 1999-03-15 | 891 Tomographic | M    | 100000 |       5 | 3334455555 |
+| Kevin    | Smith   | 567891234 | 1999-03-07 | 212 Platestreet | M    | 700000 |       4 | 3334455555 |
+| Pam      | Tree    | 654378912 | 1999-03-11 | 645 pstreet     | F    | 900000 |       4 | 987654321  |
+| Ramesh   | Narayan | 666884444 | 1999-12-05 | 975 Fire oak    | M    | 600000 |       5 | 333445555  |
+| Dwight   | Schrute | 678912345 | 1999-03-31 | 731 Grovestreet | M    | 600000 |       4 | 3334455555 |
+| cc       | three   | 789334113 | 1999-03-01 | 111 Fugglet     | F    | 700000 |       3 | 4443355555 |
+| James    | Smith   | 888665555 | 1999-03-08 | 450 Stone       | M    | 100000 |       3 | NULL       |
+| Ahmad    | Scott   | 987987987 | 1999-03-07 | 980 Dallas      | M    | 300000 |       4 | 987654321  |
++----------+---------+-----------+------------+-----------------+------+--------+---------+------------+
+12 rows in set (0.00 sec)
+
+
+
+
+mysql> select * from department;
++---------+----------------+-----------+----------------+
+| dnumber | dname          | mgr_ssn   | mgr_start_date |
++---------+----------------+-----------+----------------+
+|       1 | Headquarters   | 888665555 | 1981-06-19     |
+|       3 | Accounts       | 888665555 | 1981-06-19     |
+|       4 | Administration | 987654321 | 1995-01-01     |
+|       5 | Research       | 333445555 | 1988-05-22     |
++---------+----------------+-----------+----------------+
+4 rows in set (0.00 sec)
+
+
+
+
+mysql> select * from workson;
++-----------+-----+-------+
+| ssn       | pno | hours |
++-----------+-----+-------+
+| 234567891 |   1 |    20 |
+| 234567891 |   2 |    10 |
+| 234567891 |   3 |    15 |
+| 234567891 |   4 |    11 |
+| 234567891 |   5 |     5 |
+| 678912345 |   2 |    20 |
++-----------+-----+-------+
+6 rows in set (0.00 sec)
+
+
+mysql> select * from project;
++-----+----------+------------+---------+
+| pno | pname    | ploc       | dnumber |
++-----+----------+------------+---------+
+|   1 | Valorant | Texas      |       5 |
+|   2 | Apex     | California |       5 |
+|   3 | PUBG     | Nevada     |       5 |
+|   4 | Squad    | New York   |       5 |
+|   5 | IoT      | Washington |       5 |
++-----+----------+------------+---------+
+5 rows in set (0.00 sec)
+
+
+
+
+mysql> select * from dlocation;
++---------+------------+
+| dnumber | dlocation  |
++---------+------------+
+|       1 | Houston    |
+|       3 | Koteshwara |
+|       4 | Stafford   |
+|       5 | Bellaire   |
++---------+------------+
+4 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+1. 
+(SELECT DISTINCT p.pno 
+FROM project p, department d, employee e 
+WHERE e.dnumber=d.dnumber 
+AND p.dnumber=d.dnumber 
+AND d.mgr_ssn = e.ssn 
+AND e.lname='scott' )
+
+
+UNION (
+SELECT distinct p1.pname from project p1, workson w, employee e1
+ WHERE p1.pno=w.pno 
+AND e1.ssn=w.ssn 
+AND e1.lname='scott'
+);
++----------+
+| pno      |
++----------+
+| Valorant |
+| Apex     |
+| PUBG     |
+| Squad    |
+| IoT      |
++----------+
+5 rows in set (0.00 sec)
+
+
+2.
+SELECT e.fname, e.lname, 1.1*e.salary AS INCR_SAL 
+FROM employee e, workson w, project p 
+WHERE e.ssn=w.ssn 
+AND w.pno=p.pno 
+AND p.pname="IoT";
++----------+-------+----------+
+| fname    | lname | INCR_SAL |
++----------+-------+----------+
+| Michael  | Scott | 220000.0 |
++----------+-------+----------+
+1 row in set (0.00 sec)
+
+
+3.
+SELECT sum(e.salary), MAX(e.salary), min(e.salary), avg(e.salary)
+FROM employee e, department d
+WHERE e.dnumber=d.dnumber 
+AND d.dname="Accounts";
++---------------+---------------+---------------+---------------+
+| sum(e.salary) | MAX(e.salary) | min(e.salary) | avg(e.salary) |
++---------------+---------------+---------------+---------------+
+|        800000 |        700000 |        100000 |   400000.0000 |
++---------------+---------------+---------------+---------------+
+1 row in set (0.00 sec)
