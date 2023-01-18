@@ -1,4 +1,4 @@
-﻿1st library database
+﻿TODO : 1st library database
 ________________
 
 
@@ -1159,3 +1159,5 @@ AND d.dname="Accounts";
 |        800000 |        700000 |        100000 |   400000.0000 |
 +---------------+---------------+---------------+---------------+
 1 row in set (0.00 sec)
+
+TODO last 2 queries
